@@ -55,6 +55,22 @@ class Topic : public trantor::NonCopyable
             pair.second(message);
         }
     }
+    /**
+     * @brief Publish a message, every subscriber in the topic will receive the
+     * message except the exception.
+     *
+     * @param message
+     */
+    void publishExcept(const MessageType &message, const long except) const
+    {
+        std::shared_lock<SharedMutex> lock(mutex_);
+        for (auto &pair : handlersMap_)
+        {
+            if(pair.first != except) {
+                pair.second(message);
+            }
+        }
+    }
 
     /**
      * @brief Subscribe to the topic.
@@ -157,6 +173,24 @@ class PubSubService : public trantor::NonCopyable
             }
         }
         topicPtr->publish(message);
+    }
+
+    void publish_except(const std::string &topicName, const MessageType &message, const long exception) const
+    {
+        std::shared_ptr<Topic<MessageType>> topicPtr;
+        {
+            std::shared_lock<SharedMutex> lock(mutex_);
+            auto iter = topicMap_.find(topicName);
+            if (iter != topicMap_.end())
+            {
+                topicPtr = iter->second;
+            }
+            else
+            {
+                return;
+            }
+        }
+        topicPtr->publishExcept(message, exception);
     }
 
     /**
