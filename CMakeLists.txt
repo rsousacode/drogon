@@ -5,7 +5,7 @@ project(drogon)
 message(STATUS "compiler: " ${CMAKE_CXX_COMPILER_ID})
 
 option(BUILD_CTL "Build drogon_ctl" ON)
-option(BUILD_EXAMPLES "Build examples" ON)
+option(BUILD_EXAMPLES "Build examples" OFF)
 option(BUILD_ORM "Build orm" ON)
 option(COZ_PROFILING "Use coz for profiling" OFF)
 option(BUILD_SHARED_LIBS "Build drogon as a shared lib" OFF)
